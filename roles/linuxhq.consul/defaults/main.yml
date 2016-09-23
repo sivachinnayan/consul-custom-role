@@ -1,0 +1,7 @@
+---
+consul_datacenter: local
+consul_data_dir: /var/lib/consul
+consul_log_level: INFO
+consul_node_name: localhost
+consul_server: True
+consul_ui: False

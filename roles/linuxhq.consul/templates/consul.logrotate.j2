@@ -1,0 +1,13 @@
+{% if consul_log_file is defined %}
+{{ consul_log_file }} {
+{% else %}
+/var/log/consul/consul.log {
+{% endif %}
+    daily
+    missingok
+    rotate 7
+    compress
+    copytruncate
+    notifempty
+    create 600 consul consul
+}

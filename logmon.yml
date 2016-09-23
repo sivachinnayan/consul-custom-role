@@ -1,0 +1,9 @@
+---
+- hosts: 
+        logmon
+  connection: ssh
+  roles:
+     - role: Kuchitama.logmon
+  #logmon_installer_version: "0.1.0"
+  logmon_settings:
+    - { file: "/var/log/messages", str: "error", command: "echo -e \"ERROR\\n<%%%%>\"" }

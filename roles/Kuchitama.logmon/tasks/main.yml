@@ -1,0 +1,13 @@
+---
+- name: download logmon install suite
+  get_url: url=https://github.com/Kuchitama/logmon/archive/{{ logmon_installer_version }}.zip dest=/tmp/logmon.zip mode=700
+
+- name: unzip install suite
+  unarchive: src=/tmp/logmon.zip dest=/tmp copy=no
+
+- name: setup logmon
+  command: ./setup.sh chdir=/tmp/logmon-{{ logmon_installer_version }}
+
+- name: deploy logmon.conf
+  template: src=logmon_conf.j2 dest=/etc/logmon/logmon.conf mode=0644 force=yes
+  notify: restart logmon

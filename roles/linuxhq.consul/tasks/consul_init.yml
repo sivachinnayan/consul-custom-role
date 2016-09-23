@@ -1,0 +1,38 @@
+---
+- name: Check for consul.strapped
+  tags: consul
+  stat: path=/etc/consul/consul.strapped
+  register: consul_stat
+
+- name: Set consul_bootstrap fact (not strapped)
+  tags: consul
+  set_fact:
+    consul_bootstrap: True
+  when:
+    - consul_leader is defined
+    - consul_stat.stat.exists == False
+    - inventory_hostname == consul_leader
+
+- name: Set consul_bootstrap fact (strapped)
+  tags: consul
+  set_fact:
+    consul_bootstrap: False
+  when:
+    - consul_leader is defined
+    - consul_stat.stat.exists == True
+    - inventory_hostname == consul_leader
+
+- name: Set consul_bootstrap fact (not leader)
+  tags: consul
+  set_fact:
+    consul_bootstrap: False
+  when:
+    - consul_leader is defined
+    - inventory_hostname != consul_leader
+
+- name: Set consol_bootstrap fact (leader undefined)
+  tags: consul
+  set_fact:
+    consul_bootstrap: True
+  when:
+    - consul_leader is not defined

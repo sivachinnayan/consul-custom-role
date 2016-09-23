@@ -1,0 +1,19 @@
+---
+
+# Node version to install
+#  Make sure that the distribution and version supports the nodejs version
+#  you intend to install
+#
+nodejs_version: 4.2
+
+# NPM version
+#
+nodejs_npm_version: 2.14.7
+
+# Upgrade nodejs
+#  If you need to upgrade a currently installed nodejs version, then you
+#  should set this to True. This is mostly intended to be specified as an
+#  extra var for the playbook run.
+nodejs_upgrade: False
+
+# vi:ts=2:sw=2:et:ft=yaml

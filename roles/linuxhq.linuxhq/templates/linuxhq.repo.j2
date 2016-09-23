@@ -1,0 +1,19 @@
+[linuxhq-{{ linuxhq_pkg }}]
+name=linuxhq-{{ linuxhq_pkg }}
+baseurl=https://packagecloud.io/linuxhq/{{ linuxhq_pkg }}/el/{{ ansible_distribution_major_version }}/$basearch
+repo_gpgcheck=1
+gpgcheck=0
+enabled=0
+gpgkey=https://packagecloud.io/linuxhq/{{ linuxhq_pkg }}/gpgkey
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+
+[linuxhq-{{ linuxhq_pkg }}-source]
+name=linuxhq-{{ linuxhq_pkg }}-source
+baseurl=https://packagecloud.io/linuxhq/{{ linuxhq_pkg }}/el/{{ ansible_distribution_major_version }}/SRPMS
+repo_gpgcheck=1
+gpgcheck=0
+enabled=0
+gpgkey=https://packagecloud.io/linuxhq/{{ linuxhq_pkg }}/gpgkey
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt

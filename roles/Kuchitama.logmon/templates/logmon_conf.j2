@@ -1,0 +1,8 @@
+{% if logmon_settings is defined %}
+{% for setting in logmon_settings %}
+:{{ setting.file }}
+({{ setting.str }})
+{{ setting.command }}
+
+{% endfor %}
+{% endif %}

@@ -1,0 +1,4 @@
+---
+logmon_installer_version: "0.1.0"
+# logmon_settings:
+#   - { file: "/var/log/messages", str: "error", command: "echo -e \"ERROR\\n<%%%%>\\n\" | mail -s \"logmon alert\" me@example.com"}

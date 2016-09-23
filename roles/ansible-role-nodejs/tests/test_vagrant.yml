@@ -1,0 +1,13 @@
+---
+- hosts: all
+  sudo: yes
+
+  vars:
+    - nodejs_version: '4.2'
+
+  roles:
+    - {
+        role: ansible-role-nodejs
+      }
+
+# vi:ts=2:sw=2:et:ft=yaml

@@ -1,0 +1,41 @@
+# Path to consul binary
+{% if consul_bin is defined %}
+CONSUL_BIN={{ consul_bin }}
+{% else %}
+#CONSUL_BIN=/usr/sbin/consul
+{% endif %}
+
+# Config file for consul agent
+{% if consul_config_file is defined %}
+CONSUL_CONFIG_FILE={{ consul_config_file }}
+{% else %}
+#CONSUL_CONFIG_FILE=/etc/consul/consul.json
+{% endif %}
+
+# Log file for consul agent
+{% if consul_log_file is defined %}
+CONSUL_LOG_FILE={{ consul_log_file }}
+{% else %}
+#CONSUL_LOG_FILE=/var/log/consul/consul.log
+{% endif %}
+
+# Additional opts to pass to consul
+{% if consul_opts is defined %}
+CONSUL_OPTS="{{ consul_opts }}"
+{% else %}
+#CONSUL_OPTS=""
+{% endif %}
+
+# Pid file for consul agent
+{% if consul_pid_file is defined %}
+CONSUL_PID_FILE={{ consul_pid_file }}
+{% else %}
+#CONSUL_PID_FILE=/var/run/consul/consul.pid
+{% endif %}
+
+# User for consul to runas
+{% if consul_user is defined %}
+CONSUL_USER={{ consul_user }}
+{% else %}
+#CONSUL_USER=consul
+{% endif %}

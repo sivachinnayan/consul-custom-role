@@ -1,0 +1,4 @@
+---
+- name: restart logmon
+  service: name=logmon state=restarted
+

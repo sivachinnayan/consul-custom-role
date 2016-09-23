@@ -1,0 +1,6 @@
+---
+- name: restart consul
+  tags: consul
+  service: name=consul
+           sleep=30
+           state=restarted

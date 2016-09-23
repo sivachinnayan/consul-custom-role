@@ -1,0 +1,109 @@
+{
+{% if consul_bootstrap is defined %}
+{%   if consul_bootstrap %}
+  "bootstrap": true,
+{%   else %}
+  "bootstrap": false,
+{%   endif %}
+{% else %}
+  "bootstrap": false,
+{% endif %}
+{% if consul_client_addr is defined %}
+  "client_addr": "{{ consul_client_addr }}",
+{% endif %}
+{% if consul_datacenter is defined %}
+  "datacenter": "{{ consul_datacenter }}",
+{% else %}
+  "datacenter": "local",
+{% endif %}
+{% if consul_data_dir is defined %}
+  "data_dir": "{{ consul_data_dir }}",
+{% else %}
+  "data_dir": "/var/lib/consul",
+{% endif %}
+{% if consul_enable_syslog is defined %}
+{%   if consul_enable_syslog %}
+  "enable_syslog": true,
+{%   else %}
+  "enable_syslog": false,
+{%   endif %}
+{% endif %}
+{% if consul_log_level is defined %}
+  "log_level": "{{ consul_log_level }}",
+{% else %}
+  "log_level": "INFO",
+{% endif %}
+{% if consul_node_name is defined %}
+  "node_name": "{{ consul_node_name }}",
+{% else %}
+  "node_name": "localhost",
+{% endif %}
+{% if consul_server is defined %}
+{%   if consul_server %}
+  "server": true,
+{%   else %}
+  "server": false,
+{%   endif %}
+{% else %}
+  "server": true,
+{% endif %}
+{% if consul_start_join is defined %}
+  "start_join": [
+{%   for start_join in consul_start_join %}
+    "{{ start_join }}"{% if not loop.last %},{% endif %}
+
+{%   endfor %}
+  ],
+{% endif %}
+{% if consul_syslog_facility is defined %}
+  "syslog_facility": "{{ consul_syslog_facility }}",
+{% endif %}
+{% if consul_ui is defined %}
+{%   if consul_ui %}
+  "ui": true,
+{%   else %}
+  "ui": false,
+{%   endif %}
+{% else %}
+  "ui": false,
+{% endif %}
+  "telemetry": {
+{% if consul_telemetry is defined %}
+{%   for tkey, tvalue in consul_telemetry.iteritems()|sort %}
+{%     if tkey == 'disable_hostname' %}
+{%       if tvalue %}
+     "{{ tkey }}": true,
+{%       else %}
+     "{{ tkey }}": false,
+{%       endif %}
+{%     elif tkey == 'dogstatsd_tags' %}
+     "{{ tkey }}": [
+{%       for dogstatsd_tag in tvalue %}
+       "{{ dogstatsd_tag }}"{% if not loop.last %},{% endif %}
+
+{%       endfor %}
+     ], 
+{%     else %}
+     "{{ tkey }}": "{{ tvalue }}"{% if not loop.last %},{% endif %}
+
+{%     endif %}
+{%   endfor %}
+{% endif %}
+  },
+  "watches": [
+{% if consul_watches is defined %}
+{%   for watch in consul_watches %}
+    {
+{%     if watch.handler is defined %}
+      "handler": "{{ watch.handler }}",
+{%     endif %}
+{%     if watch.prefix is defined %}
+      "prefix": "{{ watch.prefix }}",
+{%     endif %}
+      "type": "{{ watch.type }}"
+    }{% if not loop.last %},{% endif %}
+
+{%   endfor %}
+{% endif %}
+  ]
+}

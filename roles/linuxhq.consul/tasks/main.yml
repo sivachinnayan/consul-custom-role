@@ -1,0 +1,53 @@
+---
+- include: consul_init.yml
+
+- name: Install consul package
+  tags: consul
+  yum: name=consul
+       enablerepo=linuxhq-{{ linuxhq_pkg }}
+       state=present
+       update_cache=yes
+  register: consul_yum
+
+- block:
+    - name: Configure consul
+      template: src={{ item.src }}
+                dest={{ item.dst }}
+                owner={{ item.owner }}
+                group={{ item.group }}
+                mode={{ item.mode }}
+      notify: restart consul
+      with_items:
+        - { src: consul.json.j2, dst: /etc/consul/consul.json, owner: consul, group: consul, mode: '0600' }
+        - { src: consul.logrotate.j2, dst: /etc/logrotate.d/consul, owner: root, group: root, mode: '0644' }
+        - { src: consul.sysconfig.j2, dst: /etc/sysconfig/consul, owner: root, group: root, mode: '0644' }
+    - name: Enable and start the consul service
+      service: name=consul
+               enabled=yes
+               state=started
+    - name: Create consul.strapped
+      file: path=/etc/consul/consul.strapped
+            owner=root
+            group=root
+            mode=0600
+            state=touch
+  tags: consul
+  when: consul_yum|success
+
+- include: consul_init.yml
+  when: consul_leader is defined
+
+- block:
+    - name: Pause for 30 seconds
+      pause: seconds=30
+    - name: Configure consul.json
+      template: src=consul.json.j2
+                dest=/etc/consul/consul.json
+                owner=consul
+                group=consul
+                mode=0600
+      notify: restart consul
+  tags: consul
+  when:
+    - consul_leader is defined
+    - consul_stat.stat.exists == True
