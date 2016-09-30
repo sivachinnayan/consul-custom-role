@@ -1,6 +1,0 @@
-- hosts:
-    - icinga2
-  roles:
-    - mamercad.epel
-    - mamercad.icinga2-server
-
