@@ -1,0 +1,33 @@
+# install_roles.yml
+
+# logmon from galaxy
+- src: Kuchitama.logmon
+  #name: logmon  @TODO - if required change the role name
+
+# node nvm from galaxy
+- src: ansible-role-nvm
+  #name: node-nvm  @TODO - if required change the role name
+
+# Consul from galaxy
+- src: linuxhq.consul
+  #name: consul  @TODO - if required change the role name
+  
+# Consul EPEL Repo from linuxhq - 'dependency for consul installation on centos 6' from galaxy
+- src: linuxhq.linuxhq
+  #name: epel-consul  @TODO - if required change the role name
+  
+# icinga2 nrpe from github installing to a relative path
+- src: https://github.com/Icinga/icinga2-ansible
+  path: icinga2-nrpe-agent
+
+# icinga2 ansible no ui from github installing to a relative path
+- src: https://github.com/Icinga/icinga2-ansible
+  path: icinga2-ansible-no-ui	
+
+# icinga2 ansible add hosts from github installing to a relative path
+- src: https://github.com/Icinga/icinga2-ansible
+  path: icinga2-ansible-add-hosts
+
+# icinga2 ansible classic ui from github installing to a relative path
+- src: https://github.com/Icinga/icinga2-ansible
+  path: icinga2-ansible-classic-ui
