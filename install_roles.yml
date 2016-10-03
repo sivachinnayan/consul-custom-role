@@ -16,6 +16,9 @@
 - src: linuxhq.linuxhq
   #name: epel-consul  @TODO - if required change the role name
   
+- src: pgolm.monit
+  #name: monit  @TODO - if required change the role name
+  
 # icinga2 nrpe from github installing to a relative path
 - src: https://github.com/Icinga/icinga2-ansible
   path: icinga2-nrpe-agent
