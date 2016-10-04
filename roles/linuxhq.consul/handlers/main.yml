@@ -4,3 +4,5 @@
   service: name=consul
            sleep=30
            state=restarted
+           enabled=yes
+  when: consul_manage_service

@@ -9,8 +9,12 @@
   #name: node-nvm  @TODO - if required change the role name
 
 # Consul from galaxy
-- src: linuxhq.consul
-  #name: consul  @TODO - if required change the role name
+#- src: linuxhq.consul
+#  name: linuxhq.consul #onsul  @TODO - if required change the role name
+
+# Consul from galaxy webserver, where the role is packaged in a tar.gz
+- src: https://github.com/byteshiva/ansible-role-consul/archive/consul-role-v1.tar.gz
+  name: linuxhq.consul
   
 # Consul EPEL Repo from linuxhq - 'dependency for consul installation on centos 6' from galaxy
 - src: linuxhq.linuxhq

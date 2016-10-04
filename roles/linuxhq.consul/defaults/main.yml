@@ -1,7 +1,35 @@
 ---
 consul_datacenter: local
 consul_data_dir: /var/lib/consul
+consul_log_file: /var/log/consul/consul.log
+consul_home: /usr/sbin
+consul_config_file: /etc/consul/consul.json
+consul_dynamic_bind: false
 consul_log_level: INFO
 consul_node_name: localhost
 consul_server: True
 consul_ui: False
+#consul user name
+consul_user: consul
+consul_group: consul
+consul_service_state: started
+consul_manage_service: true
+consul_config_dir: /etc/consul.d
+consul_use_initd: false
+consul_restart_handler: restart consul
+consul_initd_template: "consul.initd.sh.j2"
+consul_add_path_template: "consul.sh.j2"
+# Define Consul services to add to /etc/consul.d/*
+consul_services:
+  - service:
+      name: "weblocalhost"
+      tags:
+        - "web_http_port_80"
+      address: "127.0.0.1"
+      port: 80
+      checks:
+        - name: "web_health_check"
+          interval: "10s"
+          timeout: "1s"
+          script: "curl localhost >/dev/null 2>&1"
+consul_services_mode: 0640

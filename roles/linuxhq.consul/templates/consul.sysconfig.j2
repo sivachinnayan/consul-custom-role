@@ -5,6 +5,13 @@ CONSUL_BIN={{ consul_bin }}
 #CONSUL_BIN=/usr/sbin/consul
 {% endif %}
 
+# Path to consul config dir - 
+{% if consul_config_dir is defined %}
+CONSUL_CONFIG_DIR={{ consul_config_dir }}
+{% else %}
+#CONSUL_CONFIG_DIR=/etc/consul.d
+{% endif %}
+
 # Config file for consul agent
 {% if consul_config_file is defined %}
 CONSUL_CONFIG_FILE={{ consul_config_file }}

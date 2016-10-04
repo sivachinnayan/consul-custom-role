@@ -3,6 +3,34 @@
   tags: consul
   stat: path=/etc/consul/consul.strapped
   register: consul_stat
+  
+- name: create consul directory
+  file: >
+    state=directory
+    path={{ item }}
+    owner={{consul_user}}
+    group={{consul_group}}
+  with_items:
+    - "{{ consul_config_dir }}"
+
+- name: copy consul init.d script
+  template: >
+    src={{consul_initd_template}}
+    dest=/etc/init.d/consul
+    owner=root
+    group=root
+    mode=0755
+  when: consul_use_initd
+  notify:
+    - "{{ consul_restart_handler }}"
+
+- name: add consul to path through profile.d
+  template: >
+    src={{consul_add_path_template}}
+    dest=/etc/profile.d/consul.sh
+    owner=root
+    group=root
+    mode=0755
 
 - name: Set consul_bootstrap fact (not strapped)
   tags: consul
