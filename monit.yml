@@ -1,0 +1,7 @@
+--- 
+# Playbook monit playbook
+- hosts: monit-onprem
+  become: yes
+  roles:
+  - { role: pgolm.monit, monit_services: [ sshd ], monit_webinterface_port: 8881}
+
