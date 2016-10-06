@@ -1,41 +1,17 @@
 ---
   - hosts: consulweb
     connection: ssh
+    vars_files:
+      - vars/consweb
     roles:
       - role: linuxhq.consul
-        consul_client_addr: 0.0.0.0
-        consul_datacenter: phx
-        consul_node_name: "{{ inventory_hostname }}"
-        consul_server: false
-        consul_telemetry: {}
-        consul_leader: 192.168.10.115
-        consul_start_join:
-          - 192.168.10.116
-          - 192.168.10.117
-          - 192.168.10.150
-          - 192.168.10.191
-        consul_ui: True
-        consul_watches: []
 
   - hosts: consulserver
     connection: ssh
+    vars_files:
+      - vars/consulwebserver
     roles:
       - role: linuxhq.consul
-        consul_client_addr: 0.0.0.0
-        consul_datacenter: dhc-kore
-        consul_use_initd: true
-        consul_node_name: "{{ inventory_hostname }}"
-        consul_server: true
-        consul_dynamic_bind: true
-        consul_bind_ip: "{{ ansible_ssh_host }}"
-        consul_bootstrap: true
-        consul_telemetry: {}
-        consul_start_join:
-          - 192.168.10.116
-          - 192.168.10.150
-          - 192.168.10.191
-        consul_ui: True
-        consul_watches: []
 
   - hosts: nodejs-onprem
     connection: ssh

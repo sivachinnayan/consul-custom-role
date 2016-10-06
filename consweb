@@ -1,0 +1,285 @@
+#consul web variables
+consul_client_addr: 0.0.0.0
+consul_datacenter: dhc-kore
+consul_use_initd: true
+consul_node_name: "{{ inventory_hostname }}"
+consul_server: false
+consul_telemetry: {}
+consul_leader: 192.168.10.115
+consul_start_join:
+  - 192.168.10.116
+  - 192.168.10.117
+  - 192.168.10.150
+  - 192.168.10.191
+consul_ui: True
+consul_watches: []
+consul_services_root:
+  appserver: 
+    services:
+    - id: "Encryption"
+      name: "Encryption"
+      tags:
+      - "Encryption"
+      port: 5001
+      checks:
+      - name: Encryption TCP on port 5001
+        id: Encryption
+        tcp: localhost:5001
+        interval: 10s
+        timeout: 1s
+  
+    - id: "ResorceResolver"
+      name: "ResorceResolver"
+      tags:
+      - "ResorceResolver"
+      port: 3001
+      checks:
+      - name: ResorceResolver TCP on port 3001
+        id: ResorceResolver
+        tcp: localhost:3001
+        interval: 10s
+        timeout: 1s
+  
+    - id: "Idproxy"
+      name: "Idproxy"
+      tags:
+      - "Idproxy"
+      port: 4000
+      checks:
+      - name: Idproxy TCP on port 4000
+        id: Idproxy
+        tcp: localhost:4000
+        interval: 10s
+        timeout: 1s
+  
+    - id: "Koreapp"
+      name: "Koreapp"
+      tags:
+      - "Koreapp"
+      port: 3000
+      checks:
+      - name: Koreapp TCP on port 3000
+        id: Koreapp
+        tcp: localhost:3000
+        interval: 10s
+        timeout: 1s
+  
+    - id: "KeyServer"
+      name: "KeyServer"
+      tags:
+      - "KeyServer"
+      port: 3002
+      checks:
+      - name: KeyServer TCP on port 3002
+        id: KeyServer
+        tcp: localhost:3002
+        interval: 10s
+        timeout: 1s
+  
+    - id: "BotRTMServer"
+      name: "BotRTMServer"
+      tags:
+      - "BotRTMServer"
+      port: 9091
+      checks:
+      - name: BotRTMServer TCP on port 9091
+        id: BotRTMServer
+        tcp: localhost:9091
+        interval: 10s
+        timeout: 1s
+  
+    - id: "AlertRouter"
+      name: "AlertRouter"
+      tags:
+      - "AlertRouter"
+      port: 5673
+      checks:
+      - name: AlertRouter TCP on port 5673
+        id: AlertRouter
+        tcp: localhost:5673
+        interval: 10s
+        timeout: 1s
+  
+    - id: "AuthServer"
+      name: "AuthServer"
+      tags:
+      - "AuthServer"
+      port: 3030
+      checks:
+      - name: AuthServer TCP on port 3030
+        id: AuthServer
+        tcp: localhost:3030
+        interval: 10s
+        timeout: 1s
+  
+    - id: "Webhook"
+      name: "Webhook"
+      tags:
+      - "Webhook"
+      port: 3031
+      checks:
+      - name: Webhook TCP on port 3031
+        id: Webhook
+        tcp: localhost:3031
+        interval: 10s
+        timeout: 1s
+  
+  Arbiter:
+    services:
+    - id: "Mongo"
+      name: "Mongo"
+      tags:
+      - "Mongo"
+      port: 27017
+      checks:
+      - name: Mongo TCP on port 27017
+        id: Mongo
+        tcp: localhost:27017
+        interval: 10s
+        timeout: 1s
+
+  ElasticSearch:
+    services:
+    - id: "Elasticsearch"
+      name: "Elasticsearch"
+      tags:
+      - "Elasticsearch"
+      port: 9200
+      checks:
+      - name: Elasticsearch TCP on port 9200
+        id: Elasticsearch
+        tcp: localhost:9200
+        interval: 10s
+        timeout: 1s
+   
+    - id: "Redis"
+      name: "Redis"
+      tags:
+      - "Redis"
+      port: 6379
+      checks:
+      - name: Redis TCP on port 6379
+        id: Redis
+        tcp: localhost:6379
+        interval: 10s
+        timeout: 1s
+
+    - id: "Logstash"
+      name: "Logstash"
+      tags:
+      - "Logstash"
+      port: 5514
+      checks:
+      - name: Logstash TCP on port 5514
+        id: Logstash
+	script: "ps -ef |grep java | grep logstash | grep -v grep | awk '{print $1}'",
+        interval: 10s
+        timeout: 1s
+	status: passing
+
+  MongoPri:
+    services:
+    - id: "RMQ"
+      name: "RMQ"
+      tags:
+      - "RMQ"
+      port: 15672
+      checks:
+      - name: RMQ TCP on port 15672
+        id: RMQ
+        tcp: localhost:15672
+        interval: 10s
+        timeout: 1s
+  
+    - id: "Haraka"
+      name: "Haraka"
+      tags:
+      - "Haraka"
+      port: 25
+      checks:
+      - name: Haraka TCP on port 25
+        id: Haraka
+        tcp: localhost:25
+        interval: 10s
+        timeout: 1s
+
+  consumer:
+    services:
+    - id: "BotsService"
+      name: "BotsService"
+      tags:
+      - "BotsService"
+      port: 9235
+      checks:
+      - name: BotsService TCP on port 9235
+        id: BotsService
+	script: "ps -ef |grep BotsService.js |grep -v grep|grep -v monitor |awk '{print $9}'"
+        interval: 10s
+        timeout: 1s
+	status: passing
+  
+    - id: "WorkFlowServiceEngine"
+      name: "WorkFlowServiceEngine"
+      tags:
+      - "WorkFlowServiceEngine"
+      port: 9346
+      checks:
+      - name: WorkFlowServiceEngine TCP on port 9346
+        id: WorkFlowServiceEngine
+	script: "ps -ef |grep WorkFlowServiceEngine.js |grep -v grep|grep -v monitor |awk '{print $9}'"
+        interval: 10s
+        timeout: 1s
+	status: passing
+  
+    - id: "BotRTMJobServer"
+      name: "BotRTMJobServer"
+      tags:
+      - "BotRTMJobServer"
+      port: 9347
+      checks:
+      - name: BotRTMJobServer TCP on port 9347
+        id: BotRTMJobServer
+	script: "ps -ef |grep BotRTMJobServer.js |grep -v grep|grep -v monitor |awk '{print $9}'"
+        interval: 10s
+        timeout: 1s
+	status: passing
+  
+    - id: "PollServer"
+      name: "PollServer"
+      tags:
+      - "PollServer"
+      port: 9348
+      checks:
+      - name: PollServer TCP on port 9348
+        id: PollServer
+	script: "ps -ef |grep PollServer.js |grep -v grep|grep -v monitor |awk '{print $9}'"
+        interval: 10s
+        timeout: 1s
+	status: passing
+  
+    - id: "BotAdminJobServer"
+      name: "BotAdminJobServer"
+      tags:
+      - "BotAdminJobServer"
+      port: 9349
+      checks:
+      - name: BotAdminJobServer TCP on port 9349
+        id: BotAdminJobServer
+	script: "ps -ef |grep BotAdminJobServer.js |grep -v grep|grep -v monitor |awk '{print $9}'"
+        interval: 10s
+        timeout: 1s
+	status: passing
+
+consul_services:
+  - service:
+      name: "consulweb"
+      tags:
+        - "consulwebport80"
+      address: "127.0.0.1"
+      port: 80
+      checks:
+        - name: "webhealthcheck"
+          interval: "10s"
+          timeout: "1s"
+          script: "curl localhost >/dev/null 2>&1"
+
