@@ -2,7 +2,6 @@
   # Contact all the monitored hosts to gather facts
 - hosts: allservers
   gather_facts: True
-
   roles:
    - role: icinga2-nrpe-agent
      ansible_port_ssh: 22
