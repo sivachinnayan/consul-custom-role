@@ -1,0 +1,13 @@
+--- 
+# Playbook monit playbook
+- hosts: monit-onprem
+  become: yes
+  roles:
+  - { 
+        role: pgolm.monit, 
+        monit_mail_enabled: true, 
+        monit_alert_address: "sivasubramaniyam.chinnayan@kore.com",
+        monit_alert_addresses: ["sivasubramaniyam.chinnayan@kore.com","localhost@kore.com"],
+        monit_services: [ sshd ], 
+        monit_webinterface_port: 8881
+    }
