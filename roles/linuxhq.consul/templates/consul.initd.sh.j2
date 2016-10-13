@@ -69,7 +69,9 @@ stop)
     $1
     ;;
 restart)
-    rh_status_q || exit 7
+    #rh_status_q || exit 7
+    rh_status_q || exit 0
+    $1
     ;;
 status|status_q)
     rh_$1
