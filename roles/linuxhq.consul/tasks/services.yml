@@ -6,5 +6,5 @@
     group: '{{ consul_group }}'
     mode: '{{ consul_services_mode }}'
     content: '{ {{ item.key | to_json }} : {{item.value | to_json}} }'
-  with_dict: '{{ consul_services[consul_node_name] }}'
+  with_dict: '{{ consul_services_root[consul_node_name] }}'
   notify: restart consul
