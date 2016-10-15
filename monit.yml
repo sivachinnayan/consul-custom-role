@@ -7,3 +7,6 @@
        - vars/monitvars
   roles:
     - role: pgolm.monit
+  tasks:
+     - name: restart postfix
+       service: name=postfix state=restarted
