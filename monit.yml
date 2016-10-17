@@ -8,5 +8,7 @@
   roles:
     - role: pgolm.monit
   tasks:
+     - name: create monit log file
+       file: path=/var/log/monit owner=root group=root mode=0644 state=touch
      - name: restart postfix
        service: name=postfix state=restarted
