@@ -1,0 +1,9 @@
+---
+basedir: /root/ansible-consul-temp/temp/consul-custom-role
+private: /srv/private/ansible
+bigfiles: /srv/web/infra/bigfiles
+files: /srv/web/infra/ansible/files
+handlers: /root/ansible-consul-temp/temp/consul-custom-role/handlers
+tasks: /root/ansible-consul-temp/temp/consul-custom-role/tasks
+roles: /root/ansible-consul-temp/temp/consul-custom-role/roles
+vars_path: /root/ansible-consul-temp/temp/consul-custom-roles/vars

@@ -1,0 +1,23 @@
+---
+# Playbook Consul playbook
+- hosts: consulweb
+  connection: ssh
+  vars:
+    _baseDir: /root/ansible-consul-temp/temp/consul-custom-role
+    _varsPath: "{{ _baseDir }}/vars"
+    _rolesPath: "{{ _baseDir }}/roles"
+  vars_files:
+    - "{{_varsPath}}/consweb"
+  roles:
+    - role: "{{ _rolesPath }}/linuxhq.consul"
+
+- hosts: consulserver
+  connection: ssh
+  vars:
+    _baseDir: /root/ansible-consul-temp/temp/consul-custom-role
+    _varsPath: "{{ _baseDir }}/vars"
+    _rolesPath: "{{ _baseDir }}/roles"
+  vars_files:
+    - "{{_varsPath}}/consulwebserver"
+  roles:
+    - role: "{{ _rolesPath }}/linuxhq.consul"
