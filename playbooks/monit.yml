@@ -3,19 +3,18 @@
 - name: Playbook for monit 
   hosts: monit-onprem
   gather_facts: True
-  sudo: yes
+  user: root
   vars:
     _baseDir: /root/ansible-consul-temp/temp/consul-custom-role
     _varsPath: "{{ _baseDir }}/vars"
     _rolesPath: "{{ _baseDir }}/roles"
-  #include_vars: monitvars
+
   vars_files:
-       - "{{ _varsPath }}/global.yml"
-       - "{{ _varsPath }}/monitvars"
+   - "{{ _varsPath }}/global.yml"
+   - "{{ _varsPath }}/monitvars"
+
   roles:
-     - role: "{{ _rolesPath }}/pgolm.monit"
+    - role: "{{ _rolesPath }}/pgolm.monit"
+
   tasks:
-     - name: create monit log file
-       file: path=/var/log/monit owner=root group=root mode=0644 state=touch
-     - name: restart postfix
-       service: name=postfix state=restarted
+    - include: "{{ tasks }}/monit.yml"

@@ -1,16 +1,5 @@
 --- 
-# Playbook monit playbook
-- hosts: monit-onprem
-  #gather_facts: yes
-  sudo: yes
-  #include_vars: monitvars
-  vars_files:
-       - ../vars/monitvars
-  roles:
-    - role: pgolm.monit
-  tasks:
-     - name: create monit log file
-       #include_vars: monitvars
-       file: path=/var/log/monit owner=root group=root mode=0644 state=touch
-     - name: restart postfix
-       service: name=postfix state=restarted
+- name: create monit log file
+  file: path=/var/log/monit owner=root group=root mode=0644 state=touch
+- name: restart postfix
+  service: name=postfix state=restarted
