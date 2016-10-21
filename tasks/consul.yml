@@ -1,13 +1,22 @@
 ---
-#- name: pull integration.conf file from repo
-#  file: path=/var/log/monit owner=root group=root mode=0644 state=touch
-#- name: change dnsmasq.conf - uncomment conf_dir path
-#  file: name=postfix state=restarted
-#- name: add dns forwarding from dnsmasq to consul dns
-#  command: 'echo "server=/consul/127.0.0.1#8600" > /etc/dnsmasq.d/10-consul'
-#- name: restart dnsmasq
-#  service: name=dnsmasq state=restarted
-#- name: stop nginx
-#  service: name=nginx state=stop
-#- name: apply modified configuration
-#  command: nginx -c {{ nginx_config_path }}
+- name: Pull integration.conf file from repo
+  git: repo=ssh://git@github.com:Koredotcom/jenkins.git dest=/tmp/
+  copy: src=/tmp/jenkins/prod_scripts/KoreConfig.json_integrationqa dest=/integration.conf
+
+- name: change dnsmasq.conf - uncomment conf_dir path
+  lineinfile: dest=/etc/dnsmasq.conf  regexp=^#conf_dir line=conf_dir
+
+- name: add dns forwarding from dnsmasq to consul dns
+  shell: echo '"server=/consul/127.0.0.1#8600"' >> /etc/dnsmasq.d/10-consul
+
+- name: restart dnsmasq
+  service: name=dnsmasq state=restart
+
+- name: stop nginx
+  service: name=nginx state=stop
+
+- name: apply modified configuration
+  command: nginx -c {{ nginx_config_path }}
+
+- name: Start nginx
+  service: name=nginx state=start
