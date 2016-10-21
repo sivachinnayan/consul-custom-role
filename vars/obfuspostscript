@@ -1,0 +1,10 @@
+---
+cmd1: find {{koreserver_dir}} -path {{exclude_path1}} -prune -o -path {{exclude_path2}} -prune -o -name "{{search_pattern}}" -print
+cmd2: egrep -v "({{exclude_files}})$"
+cmd3: xargs rm -rf {}
+##############################################################################################
+koreserver_dir: /tmp/KoreServer/
+exclude_path1: /tmp/KoreServer/api/apidocs
+exclude_path2: /tmp/KoreServer/node_modules
+search_pattern: "*.js"
+exclude_files: EncryptionServer.js|Encryptor.js|test.js
