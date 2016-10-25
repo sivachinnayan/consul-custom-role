@@ -1,22 +1,25 @@
 ---
 - name: Pull integration.conf file from repo
-  git: repo=ssh://git@github.com:Koredotcom/jenkins.git dest=/tmp/
-  copy: src=/tmp/jenkins/prod_scripts/KoreConfig.json_integrationqa dest=/integration.conf
+  local_action: git repo=git@github.com:Koredotcom/jenkins.git dest=/tmp/git accept_hostkey=yes force=yes recursive=no key_file=/tmp/id_rsa
+  run_once: true
+
+- name: Copy file
+  copy: src=/tmp/git/prod_scripts/KoreConfig.json_integrationqa dest=/integration.conf
 
 - name: change dnsmasq.conf - uncomment conf_dir path
-  lineinfile: dest=/etc/dnsmasq.conf  regexp=^#conf_dir line=conf_dir
+  lineinfile: dest=/etc/dnsmasq.conf line="conf-dir=/etc/dnsmasq.d"
 
 - name: add dns forwarding from dnsmasq to consul dns
-  shell: echo '"server=/consul/127.0.0.1#8600"' >> /etc/dnsmasq.d/10-consul
+  shell: echo 'server=/consul/127.0.0.1#8600' > /etc/dnsmasq.d/10-consul
 
 - name: restart dnsmasq
-  service: name=dnsmasq state=restart
+  service: name=dnsmasq state=restarted
 
 - name: stop nginx
-  service: name=nginx state=stop
+  service: name=nginx state=stopped
 
 - name: apply modified configuration
-  command: nginx -c {{ nginx_config_path }}
+  command: nginx -c /var/www/KoreServer/config/nginx/integrations.conf
 
 - name: Start nginx
-  service: name=nginx state=start
+  service: name=nginx state=started
