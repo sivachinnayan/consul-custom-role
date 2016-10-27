@@ -2,99 +2,31 @@
   # Contact all the monitored hosts to gather facts
 - hosts: allservers
   gather_facts: True
+  vars:
+    _baseDir: /root/ansible-consul-temp/temp/consul-custom-role
+    _varsPath: "{{ _baseDir }}/vars"
+    _rolesPath: "{{ _baseDir }}/roles"
+
+  vars_files:
+   - "{{ _varsPath }}/icinga2agent"
 
   roles:
    - role: icinga2-nrpe-agent
-     ansible_port_ssh: 22
-     nrpe_allowed_hosts: "192.168.1.1,127.0.0.1,192.168.10.150"
-     nrpe_configuration: |
-       log_facility=daemon
-       server_port=5666
-       server_address={{ ansible_default_ipv4.address }}
-       dont_blame_nrpe=0
-       debug=0
-       command_timeout=60
-       connection_timeout=150
-       allowed_hosts=192.168.10.150
-     nrpe_check_commands: |
-       command[check_load]={{ nrpe_agent_plugins_x86_64 }}/check_load -w 15,10,8 -c 30,25,15
-       command[check_ssh]={{ nrpe_agent_plugins_x86_64 }}/check_ssh -H {{ ansible_eth0.ipv4.address }} -p {{ ansible_port_ssh }}
-       command[check_procs]={{ nrpe_agent_plugins_x86_64 }}/check_procs -w 300 -c 500
-       command[check_disk]={{ nrpe_agent_plugins_x86_64 }}/check_disk -w 15% -c 10% -p / -p /home -p /tmp
-       command[check_disk]={{ nrpe_agent_plugins_x86_64 }}/check_mem_ng
-       command[check_diskio]={{ nrpe_agent_plugins_x86_64 }}/check_diskstat.sh -d xvda -W 10 -C 20
-       command[check_iostat]={{ nrpe_agent_plugins_x86_64 }}/check_iostat.sh -d xvda -w 100,100,100 -c 200,200,200
-       command[check_users]={{ nrpe_agent_plugins_x86_64 }}/check_users -w 5 -c 10
-       command[check_rootvolume]={{ nrpe_agent_plugins_x86_64 }}/check_disk -w 20% -c 10% -p /
-       command[check_total_procs]={{ nrpe_agent_plugins_x86_64 }}/check_total_procs  -w 350 -c 500
-       command[check_memory]={{ nrpe_agent_plugins_x86_64 }}/check_memory
-       command[check_networkio]={{ nrpe_agent_plugins_x86_64 }}/stat_net.pl
-       command[check_openconns]={{ nrpe_agent_plugins_x86_64 }}/check_openconn 2600 2900
-       command[check_cpu_stats]={{ nrpe_agent_plugins_x86_64 }}/check_cpu_stats.sh -w 75,75,75 -c 95,95,95
-       command[check_datavolume]={{ nrpe_agent_plugins_x86_64 }}/check_disk -w 20% -c 10% -p /data
-
-     tags: nrpe-agent
 
 - hosts: icinga2-MonitoringServers
+  vars:
+    _baseDir: /root/ansible-consul-temp/temp/consul-custom-role
+    _varsPath: "{{ _baseDir }}/vars"
+    _rolesPath: "{{ _baseDir }}/roles"
+
+  vars_files:
+   - "{{ _varsPath }}/icinga2ansiblenoui"
+   - "{{ _varsPath }}icinga2ansibleaddhosts"
+   - "{{ _varsPath }}/icinga2classicui"
+
   roles:
    - role: icinga2-ansible-no-ui
-     icinga2_conf_global: |
-       include "constants.conf"
-       include "zones.conf"
-       include <itl>
-       include <plugins>
-       include "features-enabled/*.conf"
-       include_recursive "conf.d"
-     check_commands:
-       check_nrpe: |
-          "-H", "$address$",
-              "-c", "$remote_nrpe_command$",
-     tags: icinga2-no-ui
 
    - role: icinga2-ansible-classic-ui
-     icinga2_classic_ui_passwd: 'CHANGEME'
-     tags: icinga2-classic-ui
 
    - role: icinga2-ansible-add-hosts
-     configuration_logic: "object"
-     host_attributes: |
-       check_command = "http"
-       vars.sla = "24x7"
-       vars.operator = "on_call"
-     host_checks: |
-       object Service "load_average" {
-         host_name = "{{ hostvars[item]['ansible_fqdn'] }}"
-         check_command = "check_nrpe"
-         vars.remote_nrpe_command = "check_load"
-       }
-
-       object Service "disk" {
-         host_name = "{{ hostvars[item]['ansible_fqdn'] }}"
-         check_command = "check_nrpe"
-         vars.remote_nrpe_command = "check_disk"
-       }
-
-       object Service "TotalProcesses" {
-         host_name = "{{ hostvars[item]['ansible_fqdn'] }}"
-         check_command = "check_nrpe"
-         vars.remote_nrpe_command = "check_total_procs"
-       }
-
-       object Service "rootVolume" {
-         host_name = "{{ hostvars[item]['ansible_fqdn'] }}"
-         check_command = "check_nrpe"
-         vars.remote_nrpe_command = "check_rootvolume"
-       }
-
-       object Service "CheckOpenConnection" {
-         host_name = "{{ hostvars[item]['ansible_fqdn'] }}"
-         check_command = "check_nrpe"
-         vars.remote_nrpe_command = "check_openconns"
-       }
-
-       object Service "http" {
-         host_name = "{{ hostvars[item]['ansible_fqdn'] }}"
-         check_command = "http"
-         vars.http_vhost = "{{ hostvars[item]['ansible_domain'] }}"
-       }
-     tags: add-hosts
