@@ -1,0 +1,4 @@
+---
+# vars file for icinga2-ansible-classic-ui
+icinga2_classic_ui_passwd: 'CHANGEME'
+tags: icinga2-classic-ui
