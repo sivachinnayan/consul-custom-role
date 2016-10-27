@@ -21,7 +21,7 @@
 
   vars_files:
    - "{{ _varsPath }}/icinga2ansiblenoui"
-   - "{{ _varsPath }}icinga2ansibleaddhosts/"
+   - "{{ _varsPath }}icinga2ansibleaddhosts"
    - "{{ _varsPath }}/icinga2classicui"
 
   roles:
