@@ -1,0 +1,34 @@
+#!/bin/bash
+# Nagios Plugin Bash Script - check_openconnections.sh
+# This script checks the number of currently opened tcp connections with the specified WARNING and CRITICAL threshold
+#
+# Check for missing parameters
+
+
+if [[ -z "$1" ]] || [[ -z "$2" ]] ; then
+        echo "Missing parameters! Syntax: ./check_openconnections.sh USER WARNING_THRESHOLD CRITICAL_THRESHOLD"
+        exit 2
+fi
+
+# Check for number of currently opened files
+oconn=$(netstat -an | grep http | grep ESTABLISHED | wc -l)
+# Check if number of currently opened connection is lower than WARNING threshold parameter
+if [[ "$oconn" -lt "$1" ]]; then
+        echo "OK - Number of open connections are $oconn | connections=$oconn;$1;$2"
+        exit 0
+fi
+
+# Check if number of currently opened connections are greater than WARNING threshold parameter and lower than CRITICAL threshold parameter
+if [[ "$oconn" -gt "$1" ]]; then
+        if [[ "$oconn" -lt "$2" ]]; then
+        echo "WARNING - Number of open connections are $oconn | connections=$oconn;$1;$2"
+        exit 1
+fi
+fi
+
+# Check if number of currently opened connections are greater than CRITICAL threshold parameter
+if [[ "$oconn" -gt "$2" ]]; then
+        echo "CRITICAL - Number of open connections are $oconn | connections=$oconn;$1;$2"
+        exit 2
+fi
+

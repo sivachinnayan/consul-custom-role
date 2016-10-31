@@ -1,0 +1,49 @@
+
+if [[ -z "$1" ]] || [[ -z "$2" ]] | [[ -z "$3" ]] ; then
+        echo "Missing parameters! Syntax: PerCpuUsage <Processname> <Warning> <Error>"
+        exit 2
+fi
+
+
+StrCalc=$(top -bn 1 |  grep $1)
+
+if [[ -z "$StrCalc" ]]
+then
+echo "Critical - No Process Found"
+exit 2
+fi
+
+CpuUsage=$(echo $StrCalc  | sed -r -e "s;\s\s*; ;g" -e "s;^ *;;" | cut -d' ' -f9 )
+#echo $CpuUsage
+
+MemUsage=$(echo $StrCalc  | sed -r -e "s;\s\s*; ;g" -e "s;^ *;;" | cut -d' ' -f10 )
+#echo $MemUsage
+
+compare_result=`echo "$2 >$CpuUsage" | bc`
+
+if [[ "$compare_result" -gt 0 ]]; then
+        echo "OK CpuUsage is $CpuUsage | CpuUsage=$CpuUsage;$2;$3;"
+        exit 0
+fi
+
+
+compare_result=`echo "$CpuUsage >$2" | bc`
+if [[ "$compare_result" -gt 0 ]]; then
+compare_result=`echo "$3 >$CpuUsage" | bc`
+        if [[ "$compare_result" -gt 0 ]]; then
+        echo "WARNING - CpuUsage is $CpuUsage | CpuUsage=$CpuUsage;$2;$3;"
+        exit 1
+fi
+fi
+
+
+compare_result=`echo "$CpuUsage >$3" | bc`
+if [[ "$compare_result" -gt 0 ]]; then
+        echo "CRITICAL - CpuUsage is $CpuUsage | CpuUsage=$CpuUsage;$2;$3;"
+        exit 2
+fi
+
+
+
+
+

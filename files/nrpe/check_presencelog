@@ -1,0 +1,45 @@
+##make sure this file has read/write permission to nrpe user
+#whoami
+
+if [[ -z "$1" ]] || [[ -z "$2" ]] ; then
+        echo "Missing parameters! Syntax: check_presenselog <Warning> <Error>"
+        exit 2
+fi
+
+
+old=$(cat /tmp/previouscount.txt)
+new=$(wc -l /var/www/logs/presence.log | awk '{print $1}')
+count=$((new - old))
+#echo "old = $old"
+#echo "new = $new"
+#echo "Logs Processed $count"
+errors=$(tail -$count /var/www/logs/presence.log | grep 'warn: websocket connection invalid' | wc -l)
+echo "Errors found $errors"
+echo $new > /tmp/previouscount.txt
+
+
+
+
+compare_result=`echo "$1 >$errors" | bc`
+
+if [[ "$compare_result" -gt 0 ]]; then
+        echo "OK Number of Errors = $errors | Errors=$errors;$1;$2;"
+        exit 0
+fi
+
+
+compare_result=`echo "$errors >$1" | bc`
+if [[ "$compare_result" -gt 0 ]]; then
+compare_result=`echo "$2 >$errors" | bc`
+        if [[ "$compare_result" -gt 0 ]]; then
+        echo "WARNING - Number of Errors = $errors | Errors=$errors;$1;$2;"
+        exit 1
+fi
+fi
+
+
+compare_result=`echo "$errors >$2" | bc`
+if [[ "$compare_result" -gt 0 ]]; then
+        echo "CRITICAL - Number of Errors = $errors | Errors=$errors;$1;$2;"
+        exit 2
+fi

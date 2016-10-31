@@ -3,7 +3,7 @@
 - hosts: allservers
   gather_facts: True
   vars:
-    _baseDir: /opt/GIT/consul-custom-role
+    _baseDir: /opt/maheshb/consul-custom-role
     _varsPath: "{{ _baseDir }}/vars"
     _rolesPath: "{{ _baseDir }}/roles"
 
@@ -15,7 +15,7 @@
 
 - hosts: icinga2-MonitoringServers
   vars:
-    _baseDir: /opt/GIT/consul-custom-role
+    _baseDir: /opt/maheshb/consul-custom-role
     _varsPath: "{{ _baseDir }}/vars"
     _rolesPath: "{{ _baseDir }}/roles"
 
