@@ -11,7 +11,7 @@ object Host "{{ hostvars[item]['ansible_fqdn'] }}" {
 }
 
   #Here Goes Checks if Any
-  {{ host_checks }}
+  {{ host_checkss }}
 
 {% else %}
 # This is a monitoring server entry. No checks will be copied.

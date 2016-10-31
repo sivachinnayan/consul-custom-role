@@ -15,6 +15,7 @@ icinga2_classic_ui_rpm:
  - { package: "icinga2-classicui-config" }
  - { package: "icinga-gui" }
  - { package: "python-passlib" }
+ - { package: "nagios-plugins-nrpe" }
 
 htpasswd_rh: "/etc/icinga/passwd"
 

@@ -4,15 +4,25 @@
 nrpe_agent_RedHat:
  - { package: "nrpe" }
  - { package: "nagios-plugins-all" }
+ - { package: "nagios-plugins-nrpe" }
+ - { package: "nagios-plugins-disk" }
+ - { package: "nagios-plugins-snmp" }
+ - { package: "nagios-plugins-ping" }
+ - { package: "nagios-plugins-users" }
+ - { package: "nagios-plugins-procs" }
+ - { package: "nagios-plugins-load" }
+ - { package: "nagios-plugins-ssh" }
 
 nrpe_agent_Debian:
  - { package: "nagios-nrpe-server" }
  - { package: "nagios-nrpe-plugin" }
  - { package: "nagios-plugins" }
+ - { package: "check_nrpe" }
 
 nrpe_agent_Gentoo:
  - { package: "nrpe" }
  - { package: "nagios-plugins" }
+ - { package: "check_nrpe" }
 
 nrpe_agent_config: "/etc/nagios/nrpe.cfg"
 
