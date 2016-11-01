@@ -1,4 +1,4 @@
 ---
 #- include: /root/ansible-consul-temp/temp/consul-custom-role/playbooks/monit.yml
-#- include: playbooks/consul-play.yml
+- include: playbooks/consul-play.yml
 - include: playbooks/icinga2.yml
