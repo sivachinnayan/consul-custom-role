@@ -1,0 +1,112 @@
+# {{ ansible_managed }}
+#
+#visible_hostname qaproxy.kore.com
+# Recommended minimum configuration:
+#
+# Example rule allowing access from your local networks.
+# Adapt to list your (internal) IP networks from where browsing
+# should be allowed
+
+{{ squid_acls }}
+
+acl ip-block dst "/etc/squid/ip-block"
+
+#acl localnet src fc00::/7       # RFC 4193 local private network range
+#acl localnet src fe80::/10      # RFC 4291 link-local (directly plugged) machines
+
+acl SSL_ports port 443
+acl Safe_ports port 80          # http
+acl Safe_ports port 21          # ftp
+acl Safe_ports port 443         # https
+acl Safe_ports port 70          # gopher
+acl Safe_ports port 210         # wais
+acl Safe_ports port 1025-65535  # unregistered ports
+acl Safe_ports port 280         # http-mgmt
+acl Safe_ports port 488         # gss-http
+acl Safe_ports port 591         # filemaker
+acl Safe_ports port 777         # multiling http
+acl CONNECT method CONNECT
+reply_header_access x-cache deny all
+reply_header_access server deny all
+reply_header_access date deny all
+#reply_header_access mime-version deny all
+reply_header_access x-squid-error deny all
+reply_header_access status deny all
+#reply_header_access content-length deny all
+reply_header_access x-cache-lookup deny all
+
+#
+# Recommended minimum Access Permission configuration:
+#
+# Deny requests to certain unsafe ports
+http_access deny !Safe_ports
+
+# Deny CONNECT to other than secure SSL ports
+http_access deny CONNECT !SSL_ports
+
+# Only allow cachemgr access from localhost
+http_access deny  ip-block
+http_access allow localhost manager
+http_access deny manager
+
+
+#deny_info 511:ERR_deny.html ip-block
+# We strongly recommend the following be uncommented to protect innocent
+# web applications running on the proxy server who think the only
+# one who can access services on "localhost" is a local user
+#http_access deny to_localhost
+
+#
+# INSERT YOUR OWN RULE(S) HERE TO ALLOW ACCESS FROM YOUR CLIENTS
+#
+
+# Example rule allowing access from your local networks.
+# Adapt localnet in the ACL section to list your (internal) IP networks
+# from where browsing should be allowed
+http_access allow localnet
+http_access allow localhost
+reply_header_replace server KoreOps
+reply_header_replace status Ok
+# And finally deny all other access to this proxy
+http_access deny all
+
+# Squid normally listens to port 3128
+http_port 9090
+
+error_directory /etc/squid/errors/English/
+# Uncomment and adjust the following to add a disk cache directory.
+#cache_dir ufs /var/spool/squid 100 16 256
+cache_dir aufs /data/squid 2048 16 256
+
+# Leave coredumps in the first cache dir
+coredump_dir /var/spool/squid
+
+
+####Header configuration remove
+
+via off
+forwarded_for off
+
+request_header_access via deny all
+request_header_access From deny all
+request_header_access Server deny all
+request_header_access WWW-Authenticate deny all
+request_header_access Link deny all
+request_header_access Cache-Control deny all
+request_header_access Proxy-Connection deny all
+request_header_access X-Cache deny all
+request_header_access X-Cache-Lookup deny all
+request_header_access Via deny all
+request_header_access X-Forwarded-For deny all
+request_header_access Pragma deny all
+request_header_access Keep-Alive deny all
+
+#
+# Add any of your own refresh_pattern entries above these.
+#
+refresh_pattern -i ^http:\/\/.*feedburner.*\..* 2 0% 2 override-expire ignore-private ignore-no-cache ignore-no-store
+refresh_pattern ^http  2  0%  2 override-expire ignore-private ignore-no-cache ignore-no-store
+refresh_pattern ^ftp:           1440    20%     10080
+refresh_pattern ^gopher:        1440    0%      1440
+refresh_pattern -i (/cgi-bin/|\?) 0     0%      0
+refresh_pattern .               0       20%     4320

@@ -1,0 +1,50 @@
+---
+
+- name: Create the repository for squid 3.x
+  copy: src=squid.repo.j2 dest=/etc/yum.repos.d/squid.repo
+
+- name: Install the squid package
+  yum: name={{ item }} state=latest
+  with_items:
+   - squid
+
+- name: Create ipblock conf file
+  become: yes
+  template: src=ip-block.j2 dest=/etc/squid/ip-block owner=root group=root mode=0644
+  notify:
+   - restart squid
+
+- name: Create errors directory
+  become: yes
+  file: path=/etc/squid/errors/English state=directory owner=squid group=root mode=0775 recurse=yes
+
+- name: Create errors directory
+  become: yes
+  copy: src="{{ item }}" dest=/etc/squid/errors/English/ mode=0755
+  with_fileglob:
+    - files/English/*
+
+- name: Create squid data directory
+  become: yes
+  file: path=/data state=directory owner=squid group=squid mode=0775 recurse=yes
+
+- name: Create squid data-squid directory
+  become: yes
+  file: path=/data/squid state=directory owner=squid group=squid mode=0775 recurse=yes
+
+- name: Create squid conf file
+  become: yes
+  template: src=squid.conf.j2 dest=/etc/squid/squid.conf owner=root group=root mode=0644
+  notify:
+   - restart squid
+
+- name: Create swap file
+  become: yes
+  command: squid -z
+
+- name: Ensure Squid service is started and enabled on boot
+  become: yes
+  service:
+    name: squid
+    state: started
+    enabled: yes

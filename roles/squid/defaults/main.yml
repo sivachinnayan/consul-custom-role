@@ -1,0 +1,8 @@
+---
+squid_acls: |
+ acl localnet src 172.19.0.0/16  # RFC1918 possible internal network
+ acl localnet src 198.168.0.0/16 # RFC1918 possible internal network
+ acl localnet src 10.19.0.18/32  # RFC1918 possible internal network
+
+loopback_address: |
+ 127.0.0.1
