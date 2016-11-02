@@ -1,0 +1,58 @@
+lstatus1=0
+lstatus2=0
+lstatus3=0
+lstatus4=0
+
+
+file=$(echo "/var/log/nginx/api_access.log")
+lstatus1=$(echo $(( (`date +%s` - `stat -L --format %Y $file` ) < (10*60) )))
+
+file=$(ls -lrth /var/www/logs/app-logs.log.* | tail -1 | awk '{print $9}')
+lstatus2=$(echo $(( (`date +%s` - `stat -L --format %Y $file` ) < (10*60) )))
+
+file=$(ls -lrth /var/www/logs/security-logs.log.* | tail -1 | awk '{print $9}')
+lstatus3=$(echo $(( (`date +%s` - `stat -L --format %Y $file` ) < (10*60) )))
+
+file=$(ls -lrth /var/www/logs/usage-logs.log.* | tail -1 | awk '{print $9}')
+lstatus4=$(echo $(( (`date +%s` - `stat -L --format %Y $file` ) < (10*60) )))
+
+
+lstatus=$(($lstatus1 + $lstatus2 + $lstatus3 + $lstatus4))
+if [[ "$lstatus" -gt 0 ]]; then
+
+status1=0
+status2=0
+status3=0
+status4=0
+
+if [ -f /var/run/apiaccss.db ]; then
+status1=$(echo $(( (`date +%s` - `stat -L --format %Y /var/run/apiaccss.db` ) < (10*60) )))
+fi
+
+if [ -f /var/run/applog.db ]; then
+status2=$(echo $(( (`date +%s` - `stat -L --format %Y /var/run/applog.db` ) < (10*60) )))
+fi
+
+if [ -f /var/run/security.db ]; then
+status3=$(echo $(( (`date +%s` - `stat -L --format %Y /var/run/security.db` ) < (10*60) )))
+fi
+
+if [ -f /var/run/usage.db ]; then
+status4=$(echo $(( (`date +%s` - `stat -L --format %Y /var/run/usage.db` ) < (10*60) )))
+fi
+
+status=$(($status1 + $status2 + $status3 + $status4))
+
+
+if [[ "$status" -gt 0 ]]; then
+echo "Ok - Shipper is running"
+exit 0
+else
+echo "Critical - Not modfied in the last five minutes"
+exit 2
+fi
+
+else
+echo "Ok - Shipper is running."
+exit 0
+fi

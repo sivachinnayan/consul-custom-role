@@ -1,0 +1,44 @@
+
+if [[ -z "$1" ]] || [[ -z "$2" ]] | [[ -z "$3" ]] ; then
+        echo "Missing parameters! Syntax: check_cpu_process <Processname> <Warning> <Error>"
+        exit 2
+fi
+
+arg=$1
+a=$(ps -ef | grep $arg | awk '{print $2}' |  tr '\n' " " | awk '$1=$1' OFS='\\\|' | awk -v q="'" '{print "grep " q $0 q}')
+tt=$(echo "top -bn 1 | $a | awk '{print "\$"9}' |  paste -sd+ - | bc")
+StrCalc=$(eval $tt)
+CpuUsage=$StrCalc
+
+
+if [[ -z "$StrCalc" ]]
+then
+echo "Critical - No Process Found"
+exit 2
+fi
+
+
+compare_result=`echo "$2 >$CpuUsage" | bc`
+
+if [[ "$compare_result" -gt 0 ]]; then
+        echo "OK CpuUsage is $CpuUsage % | CpuUsage=$CpuUsage;$2;$3;"
+        exit 0
+fi
+
+
+compare_result=`echo "$CpuUsage >$2" | bc`
+if [[ "$compare_result" -gt 0 ]]; then
+compare_result=`echo "$3 >$CpuUsage" | bc`
+        if [[ "$compare_result" -gt 0 ]]; then
+        echo "WARNING - CpuUsage is $CpuUsage % | CpuUsage=$CpuUsage;$2;$3;"
+        exit 1
+fi
+fi
+
+
+compare_result=`echo "$CpuUsage >$3" | bc`
+if [[ "$compare_result" -gt 0 ]]; then
+        echo "CRITICAL - CpuUsage is $CpuUsage % | CpuUsage=$CpuUsage;$2;$3;"
+        exit 2
+fi
+

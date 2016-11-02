@@ -1,0 +1,45 @@
+#make sure this file has read/write permission to nrpe user
+whoami
+old=$(cat /tmp/previouscount1.txt)
+#change of appropriate log here
+new=$(sed -n '$=' /var/log/nginx/api_access.log)
+count=$((new - old))
+echo "old = $old"
+echo "new = $new"
+echo "Logs Processed $count"
+errors=$(tail -$count /var/log/nginx/api_access.log | grep -w '40.\|50.' | wc -l)
+echo "Errors found $errors"
+echo $new > /tmp/previouscount1.txt
+
+
+
+if [[ -z "$1" ]] || [[ -z "$2" ]] ; then
+        echo "Missing parameters! Syntax: check_nginx_log <Warning> <Error>"
+        exit 2
+fi
+
+
+compare_result=`echo "$1 >$errors" | bc`
+
+if [[ "$compare_result" -gt 0 ]]; then
+        echo "OK Number of Errors = $errors | Errors=$errors;$1;$2;"
+        exit 0
+fi
+
+
+compare_result=`echo "$errors >$1" | bc`
+if [[ "$compare_result" -gt 0 ]]; then
+compare_result=`echo "$2 >$errors" | bc`
+        if [[ "$compare_result" -gt 0 ]]; then
+        echo "WARNING - Number of Errors = $errors | Errors=$errors;$1;$2;"
+        exit 1
+fi
+fi
+
+
+compare_result=`echo "$errors >$2" | bc`
+if [[ "$compare_result" -gt 0 ]]; then
+        echo "CRITICAL - Number of Errors = $errors | Errors=$errors;$1;$2;"
+        exit 2
+fi
+

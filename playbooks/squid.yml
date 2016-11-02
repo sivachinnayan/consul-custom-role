@@ -1,0 +1,10 @@
+---
+  # Contact all the monitored hosts to gather facts
+- hosts: squid
+  gather_facts: True
+  vars:
+    _baseDir: /opt/maheshb/consul-custom-role
+    _rolesPath: "{{ _baseDir }}/roles"
+
+  roles:
+     - role: "{{ _rolesPath }}/squid"

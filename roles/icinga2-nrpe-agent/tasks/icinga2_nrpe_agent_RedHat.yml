@@ -16,6 +16,11 @@
            dest={{ nrpe_agent_plugins_x86_64 }}/check_mem_ng
            mode=0755
 
+- name: Copy custom plugins/scripts
+  copy: src="{{ item }}" dest="{{ nrpe_agent_plugins_x86_64 }}/" mode=0755
+  with_fileglob: 
+    - "{{ _baseDir }}/files/nrpe/*"
+
 - name: Copy Nrpe Configuration
   template: src=nrpe.cfg.j2
             dest={{ nrpe_agent_config }}

@@ -1,0 +1,50 @@
+#!/bin/bash
+#Nagios Plugin Bash Script - javastats
+
+#myvariable=$(whoami)
+#echo $myvariable > /tmp/user
+#which jstat
+
+#This script checks the various memory locations of java
+#Need to add more functionality like alerting when threshold is reached, right now the script only check if the process is running and alert.
+
+
+
+pid=$(sudo ps -ef | grep java | grep $1 | awk '{print $2}')
+pid=$(echo $pid | awk '{print $1}')
+#echo $pid > /tmp/log
+#echo $pid
+jstat -gcutil $pid &> /tmp/log
+count=$(cat /tmp/log | wc -l)
+#if [ $count -ge 4 ]
+#then
+survivorspace=$(jstat -gcutil $pid |  awk '{print $1}' | tail -n 1)
+servivorspace1=$(jstat -gcutil $pid |  awk '{print $2}' | tail -n 1)
+edenspace=$(jstat -gcutil $pid |  awk '{print $3}' | tail -n 1)
+oldspace=$(jstat -gcutil $pid |  awk '{print $4}' | tail -n 1)
+permanentspace=$(jstat -gcutil $pid |  awk '{print $5}' | tail -n 1)
+#fi
+
+if [ -z $edenspace ]
+then
+pid=$(ps -ef | grep java | grep $1 | awk '{print $2}')
+pid=$(echo $pid | awk '{print $NF}')
+survivorspace=$(jstat -gcutil $pid |  awk '{print $1}' | tail -n 1)
+servivorspace1=$(jstat -gcutil $pid |  awk '{print $2}' | tail -n 1)
+edenspace=$(jstat -gcutil $pid |  awk '{print $3}' | tail -n 1)
+oldspace=$(jstat -gcutil $pid |  awk '{print $4}' | tail -n 1)
+permanentspace=$(jstat -gcutil $pid |  awk '{print $5}' | tail -n 1)
+fi
+
+#echo "OK - Process with PID=$pid is running |s0=$survivorspace;90;100; s1=$servivorspace1;90;100; EdenSpace=$edenspace;90;100; OldSpace=$oldspace;90;100; PermanceSpace=$permanentspace;90;100;" 
+
+if [ -z $edenspace ]
+then
+echo "Critical - No PID found for the process"
+exit 2
+else
+echo "OK - Process with PID=$pid is running |s0=$survivorspace;90;100; s1=$servivorspace1;90;100; EdenSpace=$edenspace;90;100; OldSpace=$oldspace;90;100; PermanceSpace=$permanentspace;90;100;"
+exit 0
+fi
+
+#exit 0
