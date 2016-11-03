@@ -5,7 +5,7 @@
   gather_facts: True
   user: root
   vars:
-    _baseDir: /root/ansible-consul-temp/temp/consul-custom-role
+    _baseDir: "{{ BASE_DIR }}"
     _varsPath: "{{ _baseDir }}/vars"
     _rolesPath: "{{ _baseDir }}/roles"
 

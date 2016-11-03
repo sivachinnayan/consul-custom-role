@@ -3,7 +3,7 @@
 - hosts: consulweb
   connection: ssh
   vars:
-    _baseDir: /opt/maheshb/consul-custom-role
+    _baseDir: "{{ BASE_DIR }}"
     _varsPath: "{{ _baseDir }}/vars"
     _rolesPath: "{{ _baseDir }}/roles"
   vars_files:
@@ -14,7 +14,7 @@
 - hosts: consulserver
   connection: ssh
   vars:
-    _baseDir: /opt/maheshb/consul-custom-role
+    _baseDir: "{{ BASE_DIR }}"
     _varsPath: "{{ _baseDir }}/vars"
     _rolesPath: "{{ _baseDir }}/roles"
   vars_files:
