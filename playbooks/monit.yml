@@ -4,17 +4,12 @@
   hosts: monit-onprem
   gather_facts: True
   user: root
-  vars:
-    _baseDir: /root/ansible-consul-temp/temp/consul-custom-role
-    _varsPath: "{{ _baseDir }}/vars"
-    _rolesPath: "{{ _baseDir }}/roles"
 
   vars_files:
-   - "{{ _varsPath }}/global.yml"
    - "{{ _varsPath }}/monitvars"
 
   roles:
-    - role: "{{ _rolesPath }}/pgolm.monit"
+    - role: pgolm.monit
 
   tasks:
     - include: "{{ tasks }}/monit.yml"

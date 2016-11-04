@@ -2,12 +2,9 @@
 - hosts: 
         logmon
   connection: ssh
-  vars:
-    _baseDir: /root/ansible-consul-temp/temp/consul-custom-role
-    _varsPath: "{{ _baseDir }}/vars"
-    _rolesPath: "{{ _baseDir }}/roles"
+  
   roles:
-     - role: "{{ _rolesPath }}/Kuchitama.logmon"
+     - role: Kuchitama.logmon
   #logmon_installer_version: "0.1.0"
   #logmon_settings:
     #- { file: "/var/log/messages", str: "error", command: "echo -e \"ERROR\\n<%%%%>\"" }

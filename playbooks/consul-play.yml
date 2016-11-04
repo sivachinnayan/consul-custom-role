@@ -2,22 +2,16 @@
 # Playbook Consul playbook
 - hosts: consulweb
   connection: ssh
-  vars:
-    _baseDir: /opt/maheshb/consul-custom-role
-    _varsPath: "{{ _baseDir }}/vars"
-    _rolesPath: "{{ _baseDir }}/roles"
+  
   vars_files:
     - "{{_varsPath}}/consweb"
   roles:
-    - role: "{{ _rolesPath }}/linuxhq.consul"
+    - role: linuxhq.consul
 
 - hosts: consulserver
   connection: ssh
-  vars:
-    _baseDir: /opt/maheshb/consul-custom-role
-    _varsPath: "{{ _baseDir }}/vars"
-    _rolesPath: "{{ _baseDir }}/roles"
+  
   vars_files:
     - "{{_varsPath}}/consulwebserver"
   roles:
-    - role: "{{ _rolesPath }}/linuxhq.consul"
+    - role: linuxhq.consul

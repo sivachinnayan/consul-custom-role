@@ -1,12 +1,9 @@
 ---
 - hosts: nodejs-onprem
   connection: ssh
-  vars:
-    _baseDir: /root/ansible-consul-temp/temp/consul-custom-role
-    _varsPath: "{{ _baseDir }}/vars"
-    _rolesPath: "{{ _baseDir }}/roles"
+  
   roles:
-    - role: "{{ _rolesPath }}/ansible-role-nvm"
+    - role: ansible-role-nvm
       nvm_env: system
       nvm_version: v0.32.0
       nvm_default_node_version: v0.10.35
