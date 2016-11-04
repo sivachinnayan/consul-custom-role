@@ -2,22 +2,14 @@
   # Contact all the monitored hosts to gather facts
 - hosts: allservers
   gather_facts: True
-  vars:
-    _baseDir: "{{ BASE_DIR }}"
-    _varsPath: "{{ _baseDir }}/vars"
-    _rolesPath: "{{ _baseDir }}/roles"
-
+  
   vars_files:
    - "{{ _varsPath }}/icinga2agent"
 
   roles:
-     - role: "{{ _rolesPath }}/icinga2-nrpe-agent"
+     - role: icinga2-nrpe-agent
 
 - hosts: icinga2-MonitoringServers
-  vars:
-    _baseDir: "{{ BASE_DIR }}"
-    _varsPath: "{{ _baseDir }}/vars"
-    _rolesPath: "{{ _baseDir }}/roles"
 
   vars_files:
    - "{{ _varsPath }}/icinga2ansiblenoui"
@@ -25,11 +17,11 @@
    - "{{ _varsPath }}/icinga2classicui"
 
   roles:
-     - role: "{{ _rolesPath }}/icinga2-ansible-no-ui"
+     - role: icinga2-ansible-no-ui
 
-     - role: "{{ _rolesPath }}/icinga2-ansible-classic-ui"
+     - role: icinga2-ansible-classic-ui
 
-     - role: "{{ _rolesPath }}/icinga2-ansible-add-hosts"
+     - role: icinga2-ansible-add-hosts
        configuration_logic: "object"
        host_attributes: |
         vars.sla = "24x7"

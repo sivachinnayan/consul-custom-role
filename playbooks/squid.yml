@@ -3,11 +3,6 @@
 - hosts: squid
   gather_facts: True
 
-  vars:
-    _baseDir: "{{ BASE_DIR }}"
-    _varsPath: "{{ _baseDir }}/vars"
-    _rolesPath: "{{ _baseDir }}/roles"
-
   roles:
-     - role: "{{ _rolesPath }}/squid"
+     - role: squid
 
